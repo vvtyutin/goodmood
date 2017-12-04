@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.harman.goodmood.mqtt.SmartBulbManager;
 import com.harman.goodmood.recognizer.SpeachRecognizerListener;
@@ -16,6 +17,8 @@ public class MainActivity extends AppCompatActivity implements SpeachRecognizerL
     private SmartBulbManager mBulbManager;
     private SpeachRecognizerManager mSpeachManager;
 
+    private TextView mSpeachTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +27,8 @@ public class MainActivity extends AppCompatActivity implements SpeachRecognizerL
         mBulbManager = SmartBulbManager.getInstance(this);
         mSpeachManager = SpeachRecognizerManager.getInstance(this);
         mSpeachManager.addListener(this);
+
+        mSpeachTextView = (TextView) findViewById(R.id.commandText);
 
         findViewById(R.id.redButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements SpeachRecognizerL
         findViewById(R.id.stopButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mSpeachTextView.setText("");
                 mSpeachManager.stopListening();
             }
         });
@@ -71,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements SpeachRecognizerL
         findViewById(R.id.startButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mSpeachTextView.setText("");
                 mSpeachManager.startListening();
             }
         });
@@ -98,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements SpeachRecognizerL
 
     @Override
     public void onPartialResult(String text) {
+        mSpeachTextView.setText(text);
         if (text.startsWith("set color")) {
             boolean isExecuted = false;
             String[] components = text.split(" ");
