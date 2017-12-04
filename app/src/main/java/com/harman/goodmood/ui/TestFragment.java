@@ -1,9 +1,12 @@
-package com.harman.goodmood;
+package com.harman.goodmood.ui;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.harman.goodmood.mqtt.SmartBulbManager;
@@ -12,7 +15,7 @@ import com.harman.goodmood.recognizer.SpeachRecognizerManager;
 
 import goodmood.harman.com.goodmood.R;
 
-public class MainActivity extends AppCompatActivity implements SpeachRecognizerListener {
+public class TestFragment extends Fragment implements SpeachRecognizerListener {
 
     private SmartBulbManager mBulbManager;
     private SpeachRecognizerManager mSpeachManager;
@@ -20,53 +23,61 @@ public class MainActivity extends AppCompatActivity implements SpeachRecognizerL
     private TextView mSpeachTextView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        mBulbManager = SmartBulbManager.getInstance(this);
-        mSpeachManager = SpeachRecognizerManager.getInstance(this);
+        mBulbManager = SmartBulbManager.getInstance(getActivity());
+        mSpeachManager = SpeachRecognizerManager.getInstance(getActivity());
         mSpeachManager.addListener(this);
+    }
 
-        mSpeachTextView = (TextView) findViewById(R.id.commandText);
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_main, container, false);
+        mSpeachTextView = (TextView) view.findViewById(R.id.commandText);
 
-        findViewById(R.id.redButton).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.redButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
                     mBulbManager.setRGBComponents(0xFF, 0, 0);
-                } catch (Exception exc) {}
+                } catch (Exception exc) {
+                }
             }
         });
 
-        findViewById(R.id.greenButton).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.greenButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
                     mBulbManager.setRGBComponents(0, 0xFF, 0);
-                } catch (Exception exc) {}
+                } catch (Exception exc) {
+                }
             }
         });
 
-        findViewById(R.id.blueButton).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.blueButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
                     mBulbManager.setRGBComponents(0, 0, 0xFF);
-                } catch (Exception exc) {}
+                } catch (Exception exc) {
+                }
             }
         });
 
-        findViewById(R.id.offButton).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.offButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
                     mBulbManager.setRGB(0);
-                } catch (Exception exc) {}
+                } catch (Exception exc) {
+                }
             }
         });
 
-        findViewById(R.id.stopButton).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.stopButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mSpeachTextView.setText("");
@@ -74,23 +85,15 @@ public class MainActivity extends AppCompatActivity implements SpeachRecognizerL
             }
         });
 
-        findViewById(R.id.startButton).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.startButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mSpeachTextView.setText("");
                 mSpeachManager.startListening();
             }
         });
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
+        return view;
     }
 
     @Override
@@ -115,17 +118,20 @@ public class MainActivity extends AppCompatActivity implements SpeachRecognizerL
                     try {
                         mBulbManager.setRGBComponents(0, 0xFF, 0);
                         isExecuted = true;
-                    } catch (Exception exc) {}
+                    } catch (Exception exc) {
+                    }
                 } else if (color.equals("green")) {
                     try {
                         mBulbManager.setRGBComponents(0, 0xFF, 0);
                         isExecuted = true;
-                    } catch (Exception exc) {}
+                    } catch (Exception exc) {
+                    }
                 } else if (color.equals("blue")) {
                     try {
                         mBulbManager.setRGBComponents(0, 0, 0xFF);
                         isExecuted = true;
-                    } catch (Exception exc) {}
+                    } catch (Exception exc) {
+                    }
                 }
                 if (isExecuted) {
                     mSpeachManager.stopListening();
