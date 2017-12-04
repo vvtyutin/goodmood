@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context="com.harman.goodmood.MainActivity">
 
-    <TextView
+    <TextView android:id="@+id/commandText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hello Good Mood!"
@@ -16,30 +16,49 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <LinearLayout
+    <LinearLayout android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-        <Button android:id="@+id/redButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Red"/>
+            <Button android:id="@+id/redButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Red"/>
 
-        <Button android:id="@+id/greenButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Green"/>
+            <Button android:id="@+id/greenButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Green"/>
 
-        <Button android:id="@+id/blueButton"
-            android:layout_width="wrap_content"
+            <Button android:id="@+id/blueButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Blue"/>
+            <Button android:id="@+id/offButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Off"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Blue"/>
-        <Button android:id="@+id/offButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Off"/>
+            android:orientation="horizontal">
+
+            <Button android:id="@+id/startButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Start"/>
+
+            <Button android:id="@+id/stopButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Stop"/>
+        </LinearLayout>
     </LinearLayout>
-
 
 </android.support.constraint.ConstraintLayout>

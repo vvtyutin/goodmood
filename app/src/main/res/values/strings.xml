@@ -6,6 +6,7 @@
     <string-array name="permissions">
         <item>android.permission.INTERNET</item>
         <item>android.permission.READ_PHONE_STATE</item>
+        <item>android.permission.RECORD_AUDIO</item>
     </string-array>
 
 </resources>
