@@ -1,5 +1,7 @@
 package com.harman.goodmood.ui;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,19 +10,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.harman.goodmood.mqtt.SmartBulbManager;
+import com.harman.goodmood.recognizer.PitchRecognizerManager;
 import com.harman.goodmood.recognizer.SpeachRecognizerListener;
 import com.harman.goodmood.recognizer.SpeachRecognizerManager;
 
 import goodmood.harman.com.goodmood.R;
 
-public class TestFragment extends Fragment implements SpeachRecognizerListener {
+public class TestFragment extends Fragment implements SpeachRecognizerListener, PitchRecognizerManager.PitchRecognizerListener {
 
+    private static final int SAMPLE_RATE = 16000;
+    private final int MY_PERMISSIONS_RECORD_AUDIO = 1;
     private SmartBulbManager mBulbManager;
     private SpeachRecognizerManager mSpeachManager;
-
     private TextView mSpeachTextView;
+    private TextView mPitchTextView;
+    private Button mStartRecordButton;
+    private Button mStopRecordButton;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -29,6 +37,11 @@ public class TestFragment extends Fragment implements SpeachRecognizerListener {
         mBulbManager = SmartBulbManager.getInstance(getActivity());
         mSpeachManager = SpeachRecognizerManager.getInstance(getActivity());
         mSpeachManager.addListener(this);
+
+		mSpeachTextView = (TextView) findViewById(R.id.commandText);
+        mPitchTextView = (TextView) findViewById(R.id.pitchHzID);
+        mStartRecordButton = (Button) findViewById(R.id.start_record_button_id);
+        mStopRecordButton = (Button) findViewById(R.id.stop_record_button_id);
     }
 
     @Nullable
@@ -93,6 +106,31 @@ public class TestFragment extends Fragment implements SpeachRecognizerListener {
             }
         });
 
+
+        mStartRecordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ContextCompat.checkSelfPermission(MainActivity.this,
+                        Manifest.permission.RECORD_AUDIO)
+                        == PackageManager.PERMISSION_GRANTED) {
+                    PitchRecognizerManager.getInstance(MainActivity.this).startListening();
+                }
+            }
+        });
+
+        mStopRecordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ContextCompat.checkSelfPermission(MainActivity.this,
+                        Manifest.permission.RECORD_AUDIO)
+                        == PackageManager.PERMISSION_GRANTED) {
+                    PitchRecognizerManager.getInstance(MainActivity.this).stopListening();
+                }
+            }
+        });
+
+        requestAudioPermissions();
+
         return view;
     }
 
@@ -148,5 +186,79 @@ public class TestFragment extends Fragment implements SpeachRecognizerListener {
     @Override
     public void onInitCompleted() {
 
+    }
+
+    public void processPitch(float pitchInHz) {
+
+        mPitchTextView.setText("" + pitchInHz + " Hz");
+    }
+
+    public void processPitch(double averPinch, int count) {
+        mPitchTextView.setText("" + averPinch + " Hz; Count: " + count);
+    }
+
+    private void requestAudioPermissions() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.RECORD_AUDIO)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.RECORD_AUDIO)) {
+                Toast.makeText(this, "Please grant permissions to record audio", Toast.LENGTH_LONG).show();
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.RECORD_AUDIO},
+                        MY_PERMISSIONS_RECORD_AUDIO);
+
+            } else {
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.RECORD_AUDIO},
+                        MY_PERMISSIONS_RECORD_AUDIO);
+            }
+        } else if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.RECORD_AUDIO)
+                == PackageManager.PERMISSION_GRANTED) {
+
+            PitchRecognizerManager.getInstance(this).addListener(this);
+        }
+    }
+
+    //Handling callback
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_RECORD_AUDIO: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    PitchRecognizerManager.getInstance(this).addListener(this);
+                } else {
+                    Toast.makeText(this, "Permissions Denied to record audio", Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+        }
+    }
+
+
+    @Override
+    public void onPitchChanged(final float pitch) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+//                MainActivity.this.processPitch(pitch);
+            }
+        });
+    }
+
+    @Override
+    public void onBitPerMinutes(final double averagePinch, final int numberOfPinchInSecond) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                MainActivity.this.processPitch(averagePinch, numberOfPinchInSecond);
+            }
+        });
     }
 }
