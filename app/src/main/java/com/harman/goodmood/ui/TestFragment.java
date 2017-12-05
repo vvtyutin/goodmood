@@ -24,12 +24,12 @@ import goodmood.harman.com.goodmood.R;
 
 public class TestFragment extends Fragment implements SpeachRecognizerListener, PitchRecognizerManager.PitchRecognizerListener {
 
-    private static final int SAMPLE_RATE = 16000;
     private final int MY_PERMISSIONS_RECORD_AUDIO = 1;
     private SmartBulbManager mBulbManager;
     private SpeachRecognizerManager mSpeachManager;
     private TextView mSpeachTextView;
     private TextView mPitchTextView;
+    private TextView mPitchCounterTextView;
     private Button mStartRecordButton;
     private Button mStopRecordButton;
 
@@ -40,7 +40,7 @@ public class TestFragment extends Fragment implements SpeachRecognizerListener, 
         mBulbManager = SmartBulbManager.getInstance(getActivity());
         mSpeachManager = SpeachRecognizerManager.getInstance(getActivity());
         mSpeachManager.addListener(this);
-
+        PitchRecognizerManager.getInstance(getActivity()).addListener(this);
     }
 
     @Nullable
@@ -51,6 +51,7 @@ public class TestFragment extends Fragment implements SpeachRecognizerListener, 
         mPitchTextView = (TextView) view.findViewById(R.id.pitchHzID);
         mStartRecordButton = (Button) view.findViewById(R.id.start_record_button_id);
         mStopRecordButton = (Button) view.findViewById(R.id.stop_record_button_id);
+        mPitchCounterTextView = (TextView) view.findViewById(R.id.pitchCounterTextView);
 
         view.findViewById(R.id.redButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,15 +191,6 @@ public class TestFragment extends Fragment implements SpeachRecognizerListener, 
 
     }
 
-    public void processPitch(float pitchInHz) {
-
-        mPitchTextView.setText("" + pitchInHz + " Hz");
-    }
-
-    public void processPitch(double averPinch, int count) {
-        mPitchTextView.setText("" + averPinch + " Hz; Count: " + count);
-    }
-
     private void requestAudioPermissions() {
         if (ContextCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.RECORD_AUDIO)
@@ -243,23 +235,23 @@ public class TestFragment extends Fragment implements SpeachRecognizerListener, 
         }
     }
 
-
     @Override
-    public void onPitchChanged(final float pitch) {
+    public void onPitchCounterInSeconds(final int counter, final int seconds) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-//                processPitch(pitch);
+                mPitchCounterTextView.setText("" + counter + " pitch(es) in " + seconds + " seconds");
             }
         });
     }
 
     @Override
-    public void onBitPerMinutes(final double averagePinch, final int numberOfPinchInSecond) {
+    public void onPitchResultChanged(final float pitch, final double timeStamp, final float probability, final double rms) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                processPitch(averagePinch, numberOfPinchInSecond);
+                String message = String.format("Pitch detected at %.2fs: %.2fHz ( %.2f probability, RMS: %.5f )\n", timeStamp, pitch, probability, rms);
+                mPitchTextView.setText(message);
             }
         });
     }
