@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.harman.goodmood.util.BottomNavigationHelper;
+import com.harman.goodmood.util.weather.DayLightHelper;
 
 import goodmood.harman.com.goodmood.R;
 
@@ -25,6 +26,7 @@ public class HomeActivity extends AppCompatActivity {
         // Set test page as default
         navigation.getMenu().getItem(4).setChecked(true);
         setFragmentIntoContainer(new TestFragment());
+        DayLightHelper.loadDaylight();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
