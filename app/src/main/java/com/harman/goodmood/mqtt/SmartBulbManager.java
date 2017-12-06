@@ -8,9 +8,9 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 
-import goodmood.harman.com.goodmood.R;
-
 import java.util.ArrayList;
+
+import goodmood.harman.com.goodmood.R;
 
 import static android.content.Context.BIND_AUTO_CREATE;
 
@@ -26,7 +26,8 @@ public class SmartBulbManager {
 
     private static final String SMART_BULB_ID = "a10631";
 
-    private static ArrayList<SmartBulbListener>listeners = new ArrayList<>();
+    private static ArrayList<SmartBulbListener> mListeners = new ArrayList<>();
+    private static ArrayList<LocalListener> mLocalListeners = new ArrayList<>();
 
     private static BroadcastReceiver mReceiver;
     private long mColor;
@@ -60,7 +61,7 @@ public class SmartBulbManager {
                             String[] paths = payload.split("/");
                             if ((paths.length == 5) && paths[1].equals("get") && paths[3].equals("response")) {
                                 long rgb = Integer.parseInt(message);
-                                for (SmartBulbListener listener: listeners) {
+                                for (SmartBulbListener listener : mListeners) {
                                     listener.onRGBUpdated(rgb);
                                 }
                             }
@@ -72,7 +73,7 @@ public class SmartBulbManager {
         mServiceConn = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-                mService = ((MqttService.ServiceBinder)iBinder).getService();
+                mService = ((MqttService.ServiceBinder) iBinder).getService();
             }
 
             @Override
@@ -93,8 +94,8 @@ public class SmartBulbManager {
         if (listener == null) {
             return;
         }
-        if (!listeners.contains(listener)) {
-            listeners.add(listener);
+        if (!mListeners.contains(listener)) {
+            mListeners.add(listener);
         }
     }
 
@@ -102,17 +103,30 @@ public class SmartBulbManager {
         if (listener == null) {
             return;
         }
-        listeners.remove(listener);
+        mListeners.remove(listener);
+    }
+
+    public void registerLocalListener(LocalListener listener) {
+        if (listener == null) {
+            return;
+        }
+        if (!mLocalListeners.contains(listener)) {
+            mLocalListeners.add(listener);
+        }
+    }
+
+    public void unregisterLocalListener(LocalListener listener) {
+        if (listener == null) {
+            return;
+        }
+        mLocalListeners.remove(listener);
     }
 
     public void setRGB(long rgb) throws IllegalStateException {
         if (mService == null) {
             throw new IllegalStateException("Service is not connected");
         }
-        if (rgb != 0) {
-            mColor = rgb;
-        }
-        mIsEnable = (rgb != 0);
+        checkToNotifyLocalListener(rgb);
         mService.publishMQTTMessage(SMART_BULB_ID + "/set/rgb", "" + (rgb & 0x00FFFFFF));
     }
 
@@ -121,10 +135,7 @@ public class SmartBulbManager {
             throw new IllegalStateException("Service is not connected");
         }
         long rgb = (red & 0xFF) << 16 | (green & 0xFF) << 8 | blue & 0xFF;
-        if (rgb != 0) {
-            mColor = rgb;
-        }
-        mIsEnable = (rgb != 0);
+        checkToNotifyLocalListener(rgb);
         mService.publishMQTTMessage(SMART_BULB_ID + "/set/rgb", "" + rgb);
     }
 
@@ -138,5 +149,30 @@ public class SmartBulbManager {
 
     public boolean isEnable() {
         return mIsEnable;
+    }
+
+    private void checkToNotifyLocalListener(long newColor) {
+        if (newColor != 0 && mColor != newColor) {
+            mColor = newColor;
+            notifyLocalListeners(mColor);
+        }
+
+        boolean newState = (newColor != 0);
+        if (mIsEnable != newState) {
+            mIsEnable = newState;
+            notifyLocalListeners(mIsEnable);
+        }
+    }
+
+    private void notifyLocalListeners(boolean isEnable) {
+        for (LocalListener localListener : mLocalListeners) {
+            localListener.onStateChange(isEnable);
+        }
+    }
+
+    private void notifyLocalListeners(long color) {
+        for (LocalListener localListener : mLocalListeners) {
+            localListener.onColorChange(color);
+        }
     }
 }

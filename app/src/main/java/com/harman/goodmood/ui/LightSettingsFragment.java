@@ -6,10 +6,13 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.OnColorChangedListener;
 import com.flask.colorpicker.OnColorSelectedListener;
+import com.harman.goodmood.mqtt.LocalListener;
+import com.harman.goodmood.mqtt.SmartBulbListener;
 import com.harman.goodmood.mqtt.SmartBulbManager;
 
 import goodmood.harman.com.goodmood.R;
@@ -19,6 +22,7 @@ public class LightSettingsFragment extends Fragment {
     LightParentFragment.LightCallback mCallback;
 
     private ColorPickerView mColorPicker;
+    private LinearLayout mDisabledMessage;
 
 
     public static LightSettingsFragment newInstance(LightParentFragment.LightCallback parentFragmentCallback) {
@@ -52,6 +56,8 @@ public class LightSettingsFragment extends Fragment {
                 setLampColor(i);
             }
         });
+
+        mDisabledMessage = (LinearLayout) view.findViewById(R.id.message);
     }
 
     @Override
@@ -61,10 +67,41 @@ public class LightSettingsFragment extends Fragment {
         if (color != 0) {
             mColorPicker.setColor(((int) color), true);
         }
+        boolean isEnable = SmartBulbManager.getInstance(getActivity()).isEnable();
+        updateUI(isEnable);
+        SmartBulbManager.getInstance(getActivity()).registerLocalListener(mLocalLampListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        SmartBulbManager.getInstance(getActivity()).unregisterLocalListener(mLocalLampListener);
+    }
+
+    private void updateUI(boolean lampIsEnable) {
+        if (lampIsEnable) {
+            mDisabledMessage.setVisibility(View.GONE);
+            mColorPicker.setVisibility(View.VISIBLE);
+        } else {
+            mDisabledMessage.setVisibility(View.VISIBLE);
+            mColorPicker.setVisibility(View.GONE);
+        }
     }
 
     private void setLampColor(int color) {
         mCallback.onColorSelected(color);
         SmartBulbManager.getInstance(getActivity()).setRGB(color);
     }
+
+    private LocalListener mLocalLampListener = new LocalListener() {
+        @Override
+        public void onColorChange(long color) {
+
+        }
+
+        @Override
+        public void onStateChange(boolean isEnable) {
+            updateUI(isEnable);
+        }
+    };
 }

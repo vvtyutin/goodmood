@@ -52,7 +52,7 @@ public class LightParentFragment extends Fragment {
         super.onResume();
         boolean enable = SmartBulbManager.getInstance(getActivity()).isEnable();
         mSwitch.setChecked(enable);
-        tintIcon(enable);
+        updateIcons(enable);
     }
 
     public class PagerAdapter extends FragmentPagerAdapter {
@@ -116,11 +116,11 @@ public class LightParentFragment extends Fragment {
     CompoundButton.OnCheckedChangeListener mSwitchListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            tintIcon(isChecked);
+            updateIcons(isChecked);
         }
     };
 
-    private void tintIcon(boolean isChecked) {
+    private void updateIcons(boolean isChecked) {
         if (isChecked) {
             SmartBulbManager.getInstance(getActivity()).setRGB(SmartBulbManager.getInstance(getActivity()).getColor());
             mToolbarIconLight.setVisibility(View.VISIBLE);
