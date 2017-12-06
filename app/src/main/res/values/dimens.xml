@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--common-->
+    <dimen name="activity_margin">8dp</dimen>
+
+    <!--light settings screen-->
+    <dimen name="light_settings_block_height">120dp</dimen>
+    <dimen name="light_settings_circle_size">60dp</dimen>
+    <dimen name="light_settings_item_margin">8dp</dimen>
+
+</resources>

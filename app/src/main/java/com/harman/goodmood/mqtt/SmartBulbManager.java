@@ -8,6 +8,8 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 
+import goodmood.harman.com.goodmood.R;
+
 import java.util.ArrayList;
 
 import static android.content.Context.BIND_AUTO_CREATE;
@@ -27,14 +29,16 @@ public class SmartBulbManager {
     private static ArrayList<SmartBulbListener>listeners = new ArrayList<>();
 
     private static BroadcastReceiver mReceiver;
+    private long mColor;
+    private boolean mIsEnable;
 
-    private SmartBulbManager() {
-
+    private SmartBulbManager(Context context) {
+        mColor = context.getResources().getColor(R.color.lampDefaultColor);
     }
 
     public static SmartBulbManager getInstance(Context context) {
         if (instance == null) {
-            instance = new SmartBulbManager();
+            instance = new SmartBulbManager(context);
         }
         if (mService == null) {
             initService(context);
@@ -105,6 +109,10 @@ public class SmartBulbManager {
         if (mService == null) {
             throw new IllegalStateException("Service is not connected");
         }
+        if (rgb != 0) {
+            mColor = rgb;
+        }
+        mIsEnable = (rgb != 0);
         mService.publishMQTTMessage(SMART_BULB_ID + "/set/rgb", "" + (rgb & 0x00FFFFFF));
     }
 
@@ -113,10 +121,22 @@ public class SmartBulbManager {
             throw new IllegalStateException("Service is not connected");
         }
         long rgb = (red & 0xFF) << 16 | (green & 0xFF) << 8 | blue & 0xFF;
+        if (rgb != 0) {
+            mColor = rgb;
+        }
+        mIsEnable = (rgb != 0);
         mService.publishMQTTMessage(SMART_BULB_ID + "/set/rgb", "" + rgb);
     }
 
     public void requestRGB() {
         mService.publishMQTTMessage(SMART_BULB_ID + "/get/rgb", "");
+    }
+
+    public long getColor() {
+        return mColor;
+    }
+
+    public boolean isEnable() {
+        return mIsEnable;
     }
 }

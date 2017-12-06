@@ -48,7 +48,7 @@ public class HomeActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_light:
-                    setFragmentIntoContainer(new LightFragment());
+                    setFragmentIntoContainer(new LightParentFragment());
                     return true;
                 case R.id.navigation_voice:
                     setFragmentIntoContainer(new VoiceFragment());
