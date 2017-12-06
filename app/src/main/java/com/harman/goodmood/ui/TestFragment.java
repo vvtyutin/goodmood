@@ -2,6 +2,7 @@ package com.harman.goodmood.ui;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -32,6 +33,7 @@ public class TestFragment extends Fragment implements SpeachRecognizerListener, 
     private TextView mPitchCounterTextView;
     private Button mStartRecordButton;
     private Button mStopRecordButton;
+    private View mBackgroundView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,7 +42,8 @@ public class TestFragment extends Fragment implements SpeachRecognizerListener, 
         mBulbManager = SmartBulbManager.getInstance(getActivity());
         mSpeachManager = SpeachRecognizerManager.getInstance(getActivity());
         mSpeachManager.addListener(this);
-        PitchRecognizerManager.getInstance(getActivity()).addListener(this);
+
+        requestAudioPermissions();
     }
 
     @Nullable
@@ -52,6 +55,7 @@ public class TestFragment extends Fragment implements SpeachRecognizerListener, 
         mStartRecordButton = (Button) view.findViewById(R.id.start_record_button_id);
         mStopRecordButton = (Button) view.findViewById(R.id.stop_record_button_id);
         mPitchCounterTextView = (TextView) view.findViewById(R.id.pitchCounterTextView);
+        mBackgroundView = (View)view.findViewById(R.id.backgroundView);
 
         view.findViewById(R.id.redButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,7 +136,7 @@ public class TestFragment extends Fragment implements SpeachRecognizerListener, 
             }
         });
 
-        requestAudioPermissions();
+//        requestAudioPermissions();
 
         return view;
     }
@@ -252,6 +256,18 @@ public class TestFragment extends Fragment implements SpeachRecognizerListener, 
             public void run() {
                 String message = String.format("Pitch detected at %.2fs: %.2fHz ( %.2f probability, RMS: %.5f )\n", timeStamp, pitch, probability, rms);
                 mPitchTextView.setText(message);
+            }
+        });
+    }
+
+    @Override
+    public void onRGBUpdated(final int r, final int g, final int b) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                int color = Color.rgb(r,g,b);
+                mBackgroundView.setBackgroundColor(color);
             }
         });
     }
