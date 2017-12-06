@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <stroke
+        android:width="@dimen/mood_circle_width"
+        android:color="@color/mood_circle_normal"/>
+    <size
+        android:height="80dp"
+        android:width="80dp" />
+</shape>

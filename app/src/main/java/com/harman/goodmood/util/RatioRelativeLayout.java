@@ -24,7 +24,7 @@ public class RatioRelativeLayout extends RelativeLayout {
         init(context, attrs);
     }
 
-    private void init(Context context, AttributeSet attrs) {
+    protected void init(Context context, AttributeSet attrs) {
         TypedArray a = context.getTheme().obtainStyledAttributes(
                 attrs,
                 R.styleable.RatioRelativeLayout,

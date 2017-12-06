@@ -3,9 +3,12 @@
     <color name="colorPrimary">#53409f</color>
     <color name="colorPrimaryDark">#423280</color>
     <color name="colorAccent">#3F51B5</color>
-    <color name="colorBackground">#333333</color>
+    <color name="colorBackground">#1E272E</color>
     <color name="colorTextColorPrimary">#FFFFFF</color>
     <color name="colorTextColorSecondary">#818181</color>
 
     <color name="lampDefaultColor">#FFFFFF</color>
+    <color name="mood_circle_normal">#364870</color>
+    <color name="mood_circle_checked">#8EE1FF</color>
+
 </resources>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ImageView
+        android:id="@+id/normal_icon"
+        android:layout_centerInParent="true"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        tools:background="@drawable/neutrality"/>
+
+    <ImageView
+        android:id="@+id/background"
+        android:layout_centerInParent="true"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        tools:background="@drawable/neutrality_bg"/>
+
+    <ImageView
+        android:id="@+id/circle"
+        android:layout_centerInParent="true"
+        android:layout_width="92dp"
+        android:layout_height="92dp"
+        tools:background="@drawable/mood_circle_checked"/>
+
+
+</RelativeLayout>
