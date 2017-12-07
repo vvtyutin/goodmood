@@ -21,6 +21,34 @@
     </android.support.design.widget.AppBarLayout>
 
     <LinearLayout
+        android:id="@+id/off_layout"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Off"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+        <RadioButton
+            android:id="@+id/rb_off"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/text_divider" />
+
+    <LinearLayout
         android:id="@+id/constantly_layout"
         android:layout_width="match_parent"
         android:layout_height="72dp"
@@ -76,31 +104,4 @@
         android:layout_height="1dp"
         android:background="@color/text_divider" />
 
-    <LinearLayout
-        android:id="@+id/time_schedule_layout"
-        android:layout_width="match_parent"
-        android:layout_height="72dp"
-        android:clickable="true"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Time schedule"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-        <RadioButton
-            android:id="@+id/rb_time_schedule"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/text_divider" />
 </LinearLayout>

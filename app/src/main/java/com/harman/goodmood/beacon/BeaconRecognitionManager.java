@@ -4,11 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.Color;
 import android.os.RemoteException;
 import android.util.Log;
 
 import com.harman.goodmood.mqtt.SmartBulbManager;
+import com.harman.goodmood.util.weather.DayLightHelper;
+import com.harman.goodmood.util.weather.Settings;
 
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
@@ -32,6 +33,10 @@ public class BeaconRecognitionManager {
     public static final String IBEACON_LAYOUT = "m:0-3=4c000215,i:4-19,i:20-21,i:22-23,p:24-24";
 
     public static final long DEFAULT_BEACON_NOT_IN_RAINGE_TIME = 20000;
+
+    public static final int STATE_DISABLED = 0;
+    public static final int STATE_CONSTANTLY = 1;
+    public static final int STATE_DAY_NIGHT = 2;
 
     private final Activity mActivity;
 
@@ -91,20 +96,36 @@ public class BeaconRecognitionManager {
             mBeaconManager.addRangeNotifier(new RangeNotifier() {
                 @Override
                 public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
+
+                    int proximityState = Settings.getProximityState();
+
+                    if (proximityState == STATE_DISABLED) {
+                        return;
+                    }
+
                     if (beacons.size() > 0) {
                         long currentTimeMillis = System.currentTimeMillis();
 
-                        if (mBeaconVisibilityTime + DEFAULT_BEACON_NOT_IN_RAINGE_TIME < currentTimeMillis) {
-                            SmartBulbManager smartBulbManager = SmartBulbManager.getInstance(mActivity);
+                        if (beacons.iterator().next().getDistance() <= 3.0) {
+                            if (mBeaconVisibilityTime + DEFAULT_BEACON_NOT_IN_RAINGE_TIME < currentTimeMillis) {
+                                SmartBulbManager smartBulbManager = SmartBulbManager.getInstance(mActivity);
 
-                            if (beacons.iterator().next().getDistance() <= 3.0) {
-                                if (!smartBulbManager.isEnabled()) {
-                                    smartBulbManager.setRGB(smartBulbManager.getColor());
+                                if (proximityState == STATE_CONSTANTLY) {
+                                    if (!smartBulbManager.isEnabled()) {
+                                        smartBulbManager.setRGB(smartBulbManager.getColor());
+                                    }
+                                } else if (proximityState == STATE_DAY_NIGHT) {
+                                    if (!DayLightHelper.isDay()) {
+                                        if (!smartBulbManager.isEnabled()) {
+                                            smartBulbManager.setRGB(smartBulbManager.getColor());
+                                        }
+                                    }
                                 }
-                            } else {
-                                if (smartBulbManager.isEnabled()) {
-                                    smartBulbManager.setRGB(0);
-                                }
+                            }
+                        } else {
+                            SmartBulbManager smartBulbManager = SmartBulbManager.getInstance(mActivity);
+                            if (smartBulbManager.isEnabled()) {
+                                smartBulbManager.setRGB(0);
                             }
                         }
                         mBeaconVisibilityTime = currentTimeMillis;

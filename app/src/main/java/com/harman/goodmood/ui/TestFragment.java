@@ -42,8 +42,6 @@ public class TestFragment extends Fragment implements SpeachRecognizerListener, 
         mBulbManager = SmartBulbManager.getInstance(getActivity());
         mSpeachManager = SpeachRecognizerManager.getInstance(getActivity());
         mSpeachManager.addListener(this);
-
-        requestAudioPermissions();
     }
 
     @Nullable
@@ -195,49 +193,49 @@ public class TestFragment extends Fragment implements SpeachRecognizerListener, 
 
     }
 
-    private void requestAudioPermissions() {
-        if (ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.RECORD_AUDIO)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                    Manifest.permission.RECORD_AUDIO)) {
-                Toast.makeText(getActivity(), "Please grant permissions to record audio", Toast.LENGTH_LONG).show();
-
-                ActivityCompat.requestPermissions(getActivity(),
-                        new String[]{Manifest.permission.RECORD_AUDIO},
-                        MY_PERMISSIONS_RECORD_AUDIO);
-
-            } else {
-
-                ActivityCompat.requestPermissions(getActivity(),
-                        new String[]{Manifest.permission.RECORD_AUDIO},
-                        MY_PERMISSIONS_RECORD_AUDIO);
-            }
-        } else if (ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.RECORD_AUDIO)
-                == PackageManager.PERMISSION_GRANTED) {
-
-            PitchRecognizerManager.getInstance(getActivity()).addListener(this);
-        }
-    }
-
-    //Handling callback
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_RECORD_AUDIO: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    PitchRecognizerManager.getInstance(getActivity()).addListener(this);
-                } else {
-                    Toast.makeText(getActivity(), "Permissions Denied to record audio", Toast.LENGTH_LONG).show();
-                }
-                return;
-            }
-        }
-    }
+//    private void requestAudioPermissions() {
+//        if (ContextCompat.checkSelfPermission(getActivity(),
+//                Manifest.permission.RECORD_AUDIO)
+//                != PackageManager.PERMISSION_GRANTED) {
+//
+//            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+//                    Manifest.permission.RECORD_AUDIO)) {
+//                Toast.makeText(getActivity(), "Please grant permissions to record audio", Toast.LENGTH_LONG).show();
+//
+//                ActivityCompat.requestPermissions(getActivity(),
+//                        new String[]{Manifest.permission.RECORD_AUDIO},
+//                        MY_PERMISSIONS_RECORD_AUDIO);
+//
+//            } else {
+//
+//                ActivityCompat.requestPermissions(getActivity(),
+//                        new String[]{Manifest.permission.RECORD_AUDIO},
+//                        MY_PERMISSIONS_RECORD_AUDIO);
+//            }
+//        } else if (ContextCompat.checkSelfPermission(getActivity(),
+//                Manifest.permission.RECORD_AUDIO)
+//                == PackageManager.PERMISSION_GRANTED) {
+//
+//            PitchRecognizerManager.getInstance(getActivity()).addListener(this);
+//        }
+//    }
+//
+//    //Handling callback
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode,
+//                                           String permissions[], int[] grantResults) {
+//        switch (requestCode) {
+//            case MY_PERMISSIONS_RECORD_AUDIO: {
+//                if (grantResults.length > 0
+//                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                    PitchRecognizerManager.getInstance(getActivity()).addListener(this);
+//                } else {
+//                    Toast.makeText(getActivity(), "Permissions Denied to record audio", Toast.LENGTH_LONG).show();
+//                }
+//                return;
+//            }
+//        }
+//    }
 
     @Override
     public void onPitchCounterInSeconds(final int counter, final int seconds) {

@@ -1,10 +1,11 @@
 package com.harman.goodmood.ui;
 
+import android.Manifest;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -18,6 +19,9 @@ import goodmood.harman.com.goodmood.R;
 public class HomeActivity extends AppCompatActivity {
 
     private static final String TAG = HomeActivity.class.getSimpleName();
+
+    private static final int PERMISSIONS = 2;
+
     private BottomNavigationViewEx mBottomNavigationViewEx;
 
 
@@ -31,13 +35,15 @@ public class HomeActivity extends AppCompatActivity {
 
         mBottomNavigationViewEx.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         // Set test page as default
-        mBottomNavigationViewEx.setCurrentItem(4);
+        mBottomNavigationViewEx.setCurrentItem(0);
         mBottomNavigationViewEx.enableShiftingMode(false);
 
         setFragmentIntoContainer(new TestFragment());
         DayLightHelper.loadDaylight();
 
         BeaconRecognitionManager.getInstance(this);
+
+        requestPermissions();
     }
 
     @Override
@@ -45,6 +51,20 @@ public class HomeActivity extends AppCompatActivity {
         super.onDestroy();
         BeaconRecognitionManager.getInstance(this).unbind(this);
     }
+
+    private void requestPermissions() {
+        ActivityCompat.requestPermissions(
+                this,
+                new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.ACCESS_COARSE_LOCATION},
+                PERMISSIONS);
+    }
+
+    //Handling callback
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+
+    }
+
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
