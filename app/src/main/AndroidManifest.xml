@@ -35,6 +35,12 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name="com.harman.goodmood.ui.ProximitySettingActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName="com.harman.goodmood.ui.HomeActivity"
+            android:screenOrientation="portrait"/>
+
         <service android:name="com.harman.goodmood.mqtt.MqttService"/>
     </application>
 
