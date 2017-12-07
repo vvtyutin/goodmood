@@ -29,9 +29,8 @@ public class FrameAnimation {
     private Timer mAnimationTimer;
     private int mFPS = DEFAULT_FPS;
 
-    public FrameAnimation(Activity host, ImageView view) {
+    public FrameAnimation(Activity host) {
         mHost = host;
-        mView = view;
     }
 
     public void setFrames(List<Integer> resIds) {
@@ -63,15 +62,17 @@ public class FrameAnimation {
         mIsLooped = looped;
     }
 
-    public void start() {
+    public void start(ImageView view) {
+        mView = view;
         mCurFrameNumber = 0;
-        mCurFrame = null;
+        mCurFrame = getFrame(0);
         mAnimationTask = new AnimationTask();
         mAnimationTimer = new Timer();
         mAnimationTimer.schedule(mAnimationTask, 0, 1000 / mFPS);
     }
 
     public void stop() {
+        mView = null;
         mCurFrameNumber = 0;
         mCurFrame = null;
         if (mAnimationTask != null) {
@@ -82,14 +83,15 @@ public class FrameAnimation {
             mAnimationTimer.cancel();
             mAnimationTimer = null;
         }
+
     }
 
     private class AnimationTask extends TimerTask {
         @Override
         public void run() {
             if (mView != null) {
-                mCurFrame = getFrame(mCurFrameNumber++);
                 if (mCurFrame != null) {
+                    mCurFrame = getFrame(mCurFrameNumber++);
                     mHost.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -105,7 +107,7 @@ public class FrameAnimation {
         }
     }
 
-    private Drawable getFrame(int index) {
+    private synchronized Drawable getFrame(int index) {
         if (mFrameIds != null) {
             int total = mFrameIds.size();
             if (total > 0) {

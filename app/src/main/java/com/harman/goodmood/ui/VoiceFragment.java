@@ -10,7 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.harman.goodmood.util.FrameAnimation;
 import com.harman.goodmood.util.weather.MoodIconLayout;
+
+import java.util.ArrayList;
 
 import goodmood.harman.com.goodmood.R;
 
@@ -21,6 +24,8 @@ public class VoiceFragment extends Fragment {
 
     private boolean mMicIsEnable;
     private int mCheckedMood = 0;
+
+    private FrameAnimation mFrameAnimation;
 
     @Nullable
     @Override
@@ -44,6 +49,22 @@ public class VoiceFragment extends Fragment {
         mMoodLayoutArray[3].setResources(R.drawable.fear, R.drawable.fear_clr, R.drawable.fear_bg);
         mMoodLayoutArray[4].setResources(R.drawable.angel, R.drawable.angel_clr, R.drawable.angel_bg);
 
+        ArrayList<Integer> integers = new ArrayList<>();
+
+        integers.add(R.drawable.mic_anim_1);
+        integers.add(R.drawable.mic_anim_2);
+        integers.add(R.drawable.mic_anim_3);
+        integers.add(R.drawable.mic_anim_4);
+        integers.add(R.drawable.mic_anim_5);
+        integers.add(R.drawable.mic_anim_6);
+        integers.add(R.drawable.mic_anim_7);
+        integers.add(R.drawable.mic_anim_8);
+        integers.add(R.drawable.mic_anim_9);
+
+        mFrameAnimation = new FrameAnimation(getActivity());
+        mFrameAnimation.setFrames(integers);
+        mFrameAnimation.setLooped(true);
+
 
         mMicView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,15 +79,15 @@ public class VoiceFragment extends Fragment {
     public void setMicEnable(boolean isEnable) {
         mMicIsEnable = isEnable;
         if (isEnable) {
-            mMicView.setBackground(getResources().getDrawable(R.drawable.mic_anim));
-            ((AnimationDrawable) mMicView.getBackground()).start();
+            mMicView.setImageDrawable(getResources().getDrawable(R.drawable.mic_anim));
+            mFrameAnimation.start(mMicView);
 
             //TODO remove the following string
             setCheckedMood(mCheckedMood++ % 5);
 
         } else {
-            ((AnimationDrawable) mMicView.getBackground()).stop();
-            mMicView.setBackground(getResources().getDrawable(R.drawable.mic_anim_1));
+            mFrameAnimation.stop();
+            mMicView.setImageDrawable(getResources().getDrawable(R.drawable.mic_anim_1));
 
             //TODO remove the following string
             setCheckedMood(-1);

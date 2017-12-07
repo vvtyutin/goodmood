@@ -52,7 +52,7 @@ public class MusicFragment extends Fragment {
         integers.add(R.drawable.mic_anim_9);
 
 
-        mFrameAnimation = new FrameAnimation(getActivity(), mMicView);
+        mFrameAnimation = new FrameAnimation(getActivity());
         mFrameAnimation.setFrames(integers);
         mFrameAnimation.setLooped(true);
 
@@ -62,9 +62,11 @@ public class MusicFragment extends Fragment {
     public void setMicEnable(boolean isEnable) {
         mMicIsEnable = isEnable;
         if (isEnable) {
-            mFrameAnimation.start();
+            mMicView.setImageDrawable(getResources().getDrawable(R.drawable.mic_anim));
+            mFrameAnimation.start(mMicView);
         } else {
             mFrameAnimation.stop();
+            mMicView.setImageDrawable(getResources().getDrawable(R.drawable.mic_anim));
         }
     }
 }
