@@ -12,7 +12,6 @@ import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.OnColorChangedListener;
 import com.flask.colorpicker.OnColorSelectedListener;
 import com.harman.goodmood.mqtt.LocalListener;
-import com.harman.goodmood.mqtt.SmartBulbListener;
 import com.harman.goodmood.mqtt.SmartBulbManager;
 
 import goodmood.harman.com.goodmood.R;
@@ -67,7 +66,7 @@ public class LightSettingsFragment extends Fragment {
         if (color != 0) {
             mColorPicker.setColor(((int) color), true);
         }
-        boolean isEnable = SmartBulbManager.getInstance(getActivity()).isEnable();
+        boolean isEnable = SmartBulbManager.getInstance(getActivity()).isEnabled();
         updateUI(isEnable);
         SmartBulbManager.getInstance(getActivity()).registerLocalListener(mLocalLampListener);
     }
@@ -86,6 +85,7 @@ public class LightSettingsFragment extends Fragment {
             mDisabledMessage.setVisibility(View.VISIBLE);
             mColorPicker.setVisibility(View.GONE);
         }
+        mCallback.onSwitchChanged(lampIsEnable);
     }
 
     private void setLampColor(int color) {
@@ -100,8 +100,14 @@ public class LightSettingsFragment extends Fragment {
         }
 
         @Override
-        public void onStateChange(boolean isEnable) {
-            updateUI(isEnable);
+        public void onStateChange(final boolean isEnable) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    updateUI(isEnable);
+                }
+            });
+
         }
     };
 }

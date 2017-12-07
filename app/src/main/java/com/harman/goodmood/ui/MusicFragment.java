@@ -10,11 +10,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.harman.goodmood.util.FrameAnimation;
+
+import java.util.ArrayList;
+
 import goodmood.harman.com.goodmood.R;
 
 public class MusicFragment extends Fragment {
     private ImageView mMicView;
     private boolean mMicIsEnable;
+
+    private FrameAnimation mFrameAnimation;
 
     @Nullable
     @Override
@@ -33,19 +39,32 @@ public class MusicFragment extends Fragment {
             }
         });
 
+        ArrayList<Integer> integers = new ArrayList<>();
+
+        integers.add(R.drawable.mic_anim_1);
+        integers.add(R.drawable.mic_anim_2);
+        integers.add(R.drawable.mic_anim_3);
+        integers.add(R.drawable.mic_anim_4);
+        integers.add(R.drawable.mic_anim_5);
+        integers.add(R.drawable.mic_anim_6);
+        integers.add(R.drawable.mic_anim_7);
+        integers.add(R.drawable.mic_anim_8);
+        integers.add(R.drawable.mic_anim_9);
+
+
+        mFrameAnimation = new FrameAnimation(getActivity(), mMicView);
+        mFrameAnimation.setFrames(integers);
+        mFrameAnimation.setLooped(true);
+
         return view;
     }
 
     public void setMicEnable(boolean isEnable) {
         mMicIsEnable = isEnable;
         if (isEnable) {
-            mMicView.setBackground(getResources().getDrawable(R.drawable.mic_anim));
-            ((AnimationDrawable) mMicView.getBackground()).start();
-
+            mFrameAnimation.start();
         } else {
-            ((AnimationDrawable) mMicView.getBackground()).stop();
-            mMicView.setBackground(getResources().getDrawable(R.drawable.mic_anim_1));
-
+            mFrameAnimation.stop();
         }
     }
 }

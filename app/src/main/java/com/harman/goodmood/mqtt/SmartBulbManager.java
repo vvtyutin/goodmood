@@ -147,7 +147,7 @@ public class SmartBulbManager {
         return mColor;
     }
 
-    public boolean isEnable() {
+    public boolean isEnabled() {
         return mIsEnable;
     }
 

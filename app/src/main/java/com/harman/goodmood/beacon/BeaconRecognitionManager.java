@@ -31,9 +31,12 @@ public class BeaconRecognitionManager {
 
     public static final String IBEACON_LAYOUT = "m:0-3=4c000215,i:4-19,i:20-21,i:22-23,p:24-24";
 
+    public static final long DEFAULT_BEACON_NOT_IN_RAINGE_TIME = 20000;
+
     private final Activity mActivity;
 
     private BeaconManager mBeaconManager;
+    private long mBeaconVisibilityTime = 0;
 
     private static BeaconRecognitionManager mInstance;
 
@@ -89,12 +92,22 @@ public class BeaconRecognitionManager {
                 @Override
                 public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
                     if (beacons.size() > 0) {
+                        long currentTimeMillis = System.currentTimeMillis();
 
-                        if (beacons.iterator().next().getDistance() <= 3.0) {
-                            SmartBulbManager.getInstance(mActivity).setRGB(Color.WHITE);
-                        } else {
-                            SmartBulbManager.getInstance(mActivity).setRGB(0);
+                        if (mBeaconVisibilityTime + DEFAULT_BEACON_NOT_IN_RAINGE_TIME < currentTimeMillis) {
+                            SmartBulbManager smartBulbManager = SmartBulbManager.getInstance(mActivity);
+
+                            if (beacons.iterator().next().getDistance() <= 3.0) {
+                                if (!smartBulbManager.isEnabled()) {
+                                    smartBulbManager.setRGB(smartBulbManager.getColor());
+                                }
+                            } else {
+                                if (smartBulbManager.isEnabled()) {
+                                    smartBulbManager.setRGB(0);
+                                }
+                            }
                         }
+                        mBeaconVisibilityTime = currentTimeMillis;
                         Log.i(TAG, "The first beacon I see is about " + beacons.iterator().next().getDistance() + " meters away.");
                     }
                 }

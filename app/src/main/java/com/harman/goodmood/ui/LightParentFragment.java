@@ -50,7 +50,7 @@ public class LightParentFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        boolean enable = SmartBulbManager.getInstance(getActivity()).isEnable();
+        boolean enable = SmartBulbManager.getInstance(getActivity()).isEnabled();
         mSwitch.setChecked(enable);
         updateIcons(enable);
     }
@@ -94,6 +94,11 @@ public class LightParentFragment extends Fragment {
             mSwitch.setChecked(true);
             tintIcons(color);
         }
+
+        @Override
+        public void onSwitchChanged(boolean enabled) {
+            mSwitch.setChecked(enabled);
+        }
     };
 
     private void tintIcons(int color) {
@@ -111,6 +116,7 @@ public class LightParentFragment extends Fragment {
 
     interface LightCallback {
         void onColorSelected(int color);
+        void onSwitchChanged(boolean enabled);
     }
 
     CompoundButton.OnCheckedChangeListener mSwitchListener = new CompoundButton.OnCheckedChangeListener() {
