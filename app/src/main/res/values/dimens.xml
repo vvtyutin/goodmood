@@ -9,5 +9,6 @@
     <dimen name="light_settings_item_margin">8dp</dimen>
     <dimen name="voice_item_margin">4dp</dimen>
     <dimen name="mood_circle_width">3dp</dimen>
+    <dimen name="size_between_dots">8dp</dimen>
 
 </resources>

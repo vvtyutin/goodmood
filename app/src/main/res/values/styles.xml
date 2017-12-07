@@ -21,5 +21,8 @@
         <item name="colorPrimaryDark">@color/colorBackground</item>
     </style>
 
-
+    <style name="BottomTabLayout" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="colorPrimary">@color/mood_mic_color</item>
+        <item name="colorPrimaryDark">@color/mood_mic_color</item>
+    </style>
 </resources>

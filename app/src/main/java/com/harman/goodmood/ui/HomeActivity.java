@@ -3,21 +3,22 @@ package com.harman.goodmood.ui;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.harman.goodmood.beacon.BeaconRecognitionManager;
-import com.harman.goodmood.util.BottomNavigationHelper;
 import com.harman.goodmood.util.weather.DayLightHelper;
+import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import goodmood.harman.com.goodmood.R;
 
 public class HomeActivity extends AppCompatActivity {
 
     private static final String TAG = HomeActivity.class.getSimpleName();
-
+    private BottomNavigationViewEx mBottomNavigationViewEx;
 
 
     @Override
@@ -25,11 +26,14 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        BottomNavigationHelper.disableShiftMode(navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        mBottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.navigation);
+//        BottomNavigationHelper.disableShiftMode(mBottomNavigationViewEx);
+
+        mBottomNavigationViewEx.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         // Set test page as default
-        navigation.getMenu().getItem(4).setChecked(true);
+        mBottomNavigationViewEx.setCurrentItem(4);
+        mBottomNavigationViewEx.enableShiftingMode(false);
+
         setFragmentIntoContainer(new TestFragment());
         DayLightHelper.loadDaylight();
 

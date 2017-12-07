@@ -49,11 +49,50 @@
 
         </com.harman.goodmood.util.RatioRelativeLayout>
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="Press to listen music" />
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="8dp"
+                    android:layout_height="8dp"
+                    android:layout_marginBottom="@dimen/size_between_dots"
+                    android:background="@drawable/mic_circle" />
+
+                <View
+                    android:layout_width="6dp"
+                    android:layout_height="6dp"
+                    android:layout_marginBottom="@dimen/size_between_dots"
+                    android:background="@drawable/mic_circle" />
+
+                <View
+                    android:layout_width="4dp"
+                    android:layout_marginBottom="@dimen/size_between_dots"
+                    android:layout_height="4dp"
+                    android:background="@drawable/mic_circle" />
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="2dp"
+                    android:background="@drawable/mic_circle" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Press to listen music" />
+        </LinearLayout>
 
     </LinearLayout>
 </LinearLayout>
