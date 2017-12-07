@@ -59,7 +59,7 @@ public class MoodIconLayout extends RatioRelativeLayout {
         super.init(context, attrs);
         LayoutInflater.from(getContext()).inflate(R.layout.mood_icon_layout, this);
 
-        mIconView = (ImageView) findViewById(R.id.normal_icon);
+        mIconView = (ImageView) findViewById(R.id.mood_icon);
         mBackgroundView = (ImageView) findViewById(R.id.background);
         mCircleView = (ImageView) findViewById(R.id.circle);
         updateUI();

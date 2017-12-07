@@ -1,13 +1,14 @@
 package com.harman.goodmood.ui;
 
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.harman.goodmood.util.weather.MoodIconLayout;
 
@@ -16,6 +17,10 @@ import goodmood.harman.com.goodmood.R;
 public class VoiceFragment extends Fragment {
 
     private MoodIconLayout[] mMoodLayoutArray = new MoodIconLayout[5];
+    private ImageView mMicView;
+
+    private boolean mMicIsEnable;
+    private int mCheckedMood = 0;
 
     @Nullable
     @Override
@@ -25,26 +30,53 @@ public class VoiceFragment extends Fragment {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         toolbar.setTitle("Voice");
 
+        mMicView = (ImageView) view.findViewById(R.id.mic_view);
+
         mMoodLayoutArray[0] = (MoodIconLayout) view.findViewById(R.id.mood_neutrality);
         mMoodLayoutArray[1] = (MoodIconLayout) view.findViewById(R.id.mood_sadness);
         mMoodLayoutArray[2] = (MoodIconLayout) view.findViewById(R.id.mood_happiness);
         mMoodLayoutArray[3] = (MoodIconLayout) view.findViewById(R.id.mood_fear);
         mMoodLayoutArray[4] = (MoodIconLayout) view.findViewById(R.id.mood_angel);
 
-        mMoodLayoutArray[0].setResources(R.drawable.neutrality, R.drawable.happiness_clr, R.drawable.neutrality_bg);
+        mMoodLayoutArray[0].setResources(R.drawable.neutrality, R.drawable.neutrality_clr, R.drawable.neutrality_bg);
         mMoodLayoutArray[1].setResources(R.drawable.sadness, R.drawable.sadness_clr, R.drawable.sadness_bg);
         mMoodLayoutArray[2].setResources(R.drawable.happiness, R.drawable.happiness_clr, R.drawable.happiness_bg);
         mMoodLayoutArray[3].setResources(R.drawable.fear, R.drawable.fear_clr, R.drawable.fear_bg);
         mMoodLayoutArray[4].setResources(R.drawable.angel, R.drawable.angel_clr, R.drawable.angel_bg);
 
+
+        mMicView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setMicEnable(!mMicIsEnable);
+            }
+        });
+
         return view;
     }
 
+    public void setMicEnable(boolean isEnable) {
+        mMicIsEnable = isEnable;
+        if (isEnable) {
+            mMicView.setBackground(getResources().getDrawable(R.drawable.mic_anim));
+            ((AnimationDrawable) mMicView.getBackground()).start();
+
+            //TODO remove the following string
+            setCheckedMood(mCheckedMood++ % 5);
+
+        } else {
+            ((AnimationDrawable) mMicView.getBackground()).stop();
+            mMicView.setBackground(getResources().getDrawable(R.drawable.mic_anim_1));
+
+            //TODO remove the following string
+            setCheckedMood(-1);
+        }
+    }
+
+
     public void setCheckedMood(int index) {
-        if (index >= 0 && index <= 5) {
-            for (int i = 0; i < 5; i++) {
-                mMoodLayoutArray[i].setChecked(i == index);
-            }
+        for (int i = 0; i < 5; i++) {
+            mMoodLayoutArray[i].setChecked(i == index);
         }
     }
 }

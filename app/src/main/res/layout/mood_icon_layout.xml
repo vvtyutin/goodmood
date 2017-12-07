@@ -1,29 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/normal_icon"
+        android:id="@+id/mood_icon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_centerInParent="true"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        tools:background="@drawable/neutrality"/>
+        tools:background="@drawable/neutrality" />
 
     <ImageView
         android:id="@+id/background"
-        android:layout_centerInParent="true"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        tools:background="@drawable/neutrality_bg"/>
+        android:layout_centerInParent="true"
+        tools:background="@drawable/neutrality_bg" />
 
     <ImageView
         android:id="@+id/circle"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_centerInParent="true"
-        android:layout_width="92dp"
-        android:layout_height="92dp"
-        tools:background="@drawable/mood_circle_checked"/>
-
+        tools:background="@drawable/mood_circle_checked" />
 
 </RelativeLayout>
