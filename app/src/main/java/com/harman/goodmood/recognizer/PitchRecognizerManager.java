@@ -26,7 +26,7 @@ public class PitchRecognizerManager {
     private static int SAMPLE_RATE = 44100;
     private static int BUFFER_SIZE = 2048;
     private static int OVERLAP = 0;
-    private static int BUCKET_SIZE = 2000;
+    private static int BUCKET_SIZE = 1000;
 
     private static int PITCH_COLORS_SIZE = 11;
 
@@ -66,13 +66,14 @@ public class PitchRecognizerManager {
                     if (timestamp - mTimeStampPreviousPitch < BUCKET_SIZE) {
                         mPitchCounter++;
                     } else {
+
+                        PitchRecognizerManager.this.sendColorForPitches2();
+
                         if (listeners != null) {
                             for (PitchRecognizerListener listener : listeners) {
                                 listener.onPitchCounterInSeconds(mPitchCounter, BUCKET_SIZE / 1000);
                             }
                         }
-
-                        PitchRecognizerManager.this.sendColorForPitches2();
 
                         mTimeStampPreviousPitch = timestamp;
                         mPitchCounter = 0;

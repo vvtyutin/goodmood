@@ -239,6 +239,7 @@ public class TestFragment extends Fragment implements SpeachRecognizerListener, 
 
     @Override
     public void onPitchCounterInSeconds(final int counter, final int seconds) {
+
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -249,6 +250,7 @@ public class TestFragment extends Fragment implements SpeachRecognizerListener, 
 
     @Override
     public void onPitchResultChanged(final float pitch, final double timeStamp, final float probability, final double rms) {
+
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -260,6 +262,7 @@ public class TestFragment extends Fragment implements SpeachRecognizerListener, 
 
     @Override
     public void onRGBUpdated(final int r, final int g, final int b) {
+
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {

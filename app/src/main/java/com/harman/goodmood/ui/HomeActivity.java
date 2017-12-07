@@ -35,10 +35,10 @@ public class HomeActivity extends AppCompatActivity {
 
         mBottomNavigationViewEx.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         // Set test page as default
-        mBottomNavigationViewEx.setCurrentItem(0);
+        mBottomNavigationViewEx.setCurrentItem(1);
         mBottomNavigationViewEx.enableShiftingMode(false);
 
-        setFragmentIntoContainer(new TestFragment());
+//        setFragmentIntoContainer(new TestFragment());
         DayLightHelper.loadDaylight();
 
         BeaconRecognitionManager.getInstance(this);
@@ -82,9 +82,6 @@ public class HomeActivity extends AppCompatActivity {
                     return true;
                 case R.id.navigation_settings:
                     setFragmentIntoContainer(new SettingFragment());
-                    return true;
-                case R.id.navigation_test:
-                    setFragmentIntoContainer(new TestFragment());
                     return true;
             }
             return false;

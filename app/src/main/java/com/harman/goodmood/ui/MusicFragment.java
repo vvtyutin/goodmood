@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.harman.goodmood.recognizer.PitchRecognizerManager;
 import com.harman.goodmood.util.FrameAnimation;
 
 import java.util.ArrayList;
@@ -64,9 +65,11 @@ public class MusicFragment extends Fragment {
         if (isEnable) {
             mMicView.setImageDrawable(getResources().getDrawable(R.drawable.mic_anim));
             mFrameAnimation.start(mMicView);
+            PitchRecognizerManager.getInstance(getActivity()).startListening();
         } else {
             mFrameAnimation.stop();
             mMicView.setImageDrawable(getResources().getDrawable(R.drawable.mic_anim));
+            PitchRecognizerManager.getInstance(getActivity()).stopListening();
         }
     }
 }

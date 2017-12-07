@@ -21,8 +21,4 @@
         android:icon="@drawable/ic_settings"
         android:title="@string/navigation_title_settings" />
 
-    <item
-        android:id="@+id/navigation_test"
-        android:icon="@drawable/ic_placeholder"
-        android:title="test" />
 </menu>
