@@ -30,7 +30,7 @@ public class VoiceFragment extends Fragment {
 
     private static final int LISTENING_DURATION = 7 * 1000;
 
-    private static final int[] COLORS = new int[]{0xFFFF00, 0xFF8080, 0x999999, 0xFF0000, 0x00FF00};
+    private static final int[] COLORS = new int[]{0xFFFF00, 0x00FFCC, 0x999999, 0xFF0000, 0x00FF00};
 
     private MoodIconLayout[] mMoodLayoutArray = new MoodIconLayout[5];
     private ImageView mMicView;
@@ -131,20 +131,22 @@ public class VoiceFragment extends Fragment {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        setMicEnable(!mMicIsEnable);
-                        try {
-                            highlight(mVokaturiApi.stopListeningAndAnalyze());
-                        } catch (VokaturiException e) {
-                            e.printStackTrace();
-                            if (e.getErrorCode() == VokaturiException.VOKATURI_NOT_ENOUGH_SONORANCY) {
-                                Toast.makeText(getContext(), "Please speak a more clear and avoid noise around your environment", Toast.LENGTH_LONG).show();
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            setMicEnable(!mMicIsEnable);
+                            try {
+                                highlight(mVokaturiApi.stopListeningAndAnalyze());
+                            } catch (VokaturiException e) {
+                                e.printStackTrace();
+                                if (e.getErrorCode() == VokaturiException.VOKATURI_NOT_ENOUGH_SONORANCY) {
+                                    Toast.makeText(getContext(), "Please speak a more clear and avoid noise around your environment", Toast.LENGTH_LONG).show();
+                                }
                             }
                         }
-                    }
-                });
+                    });
+                }
             }
         };
 
@@ -165,9 +167,9 @@ public class VoiceFragment extends Fragment {
 
 
     public void setCheckedMood(int index) {
+        SmartBulbManager.getInstance(getContext()).setRGB(COLORS[index]);
         for (int i = 0; i < 5; i++) {
             mMoodLayoutArray[i].setChecked(i == index);
-            SmartBulbManager.getInstance(getActivity()).setRGB(COLORS[i]);
         }
     }
 
