@@ -93,11 +93,12 @@ public class LightTemplateFragment extends Fragment {
                 }
             }
         });
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
 
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        llm.setAutoMeasureEnabled(false);
         mRecyclerView.setAdapter(mTemplatesAdapter);
+        mRecyclerView.setLayoutManager(llm);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mTemplatesAdapter.notifyDataSetChanged();
     }
 
