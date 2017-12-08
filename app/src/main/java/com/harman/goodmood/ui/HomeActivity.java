@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.harman.goodmood.beacon.BeaconRecognitionManager;
+import com.harman.goodmood.mqtt.SmartBulbManager;
 import com.harman.goodmood.util.weather.DayLightHelper;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
@@ -42,6 +43,8 @@ public class HomeActivity extends AppCompatActivity {
         DayLightHelper.loadDaylight();
 
         BeaconRecognitionManager.getInstance(this);
+
+        SmartBulbManager.getInstance(this);
 
         requestPermissions();
     }

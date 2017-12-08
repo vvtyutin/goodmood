@@ -23,7 +23,7 @@ import goodmood.harman.com.goodmood.R;
 public class LightTemplateFragment extends Fragment {
     LightParentFragment.LightCallback mCallback;
 
-    private static final int PERIOD = 5000;
+    private static final int PERIOD = 1000;
 
     private RecyclerView mRecyclerView;
     private TemplatesAdapter mTemplatesAdapter;
@@ -53,6 +53,7 @@ public class LightTemplateFragment extends Fragment {
 
         final ArrayList spartakColors = new ArrayList<Integer>();
         spartakColors.add(Integer.valueOf(16711680));
+        spartakColors.add(Integer.valueOf(16711681));
         spartakColors.add(Integer.valueOf(-1));
         templatesList.add(new Template("Spartak", R.drawable.spartak, spartakColors));
 
