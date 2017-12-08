@@ -64,7 +64,7 @@ public class LightSettingsFragment extends Fragment {
         super.onResume();
         long color = SmartBulbManager.getInstance(getActivity()).getColor();
         if (color != 0) {
-            mColorPicker.setColor(((int) color), true);
+            mColorPicker.setColor((((int) color)) | 0xFF000000, true);
         }
         boolean isEnable = SmartBulbManager.getInstance(getActivity()).isEnabled();
         updateUI(isEnable);

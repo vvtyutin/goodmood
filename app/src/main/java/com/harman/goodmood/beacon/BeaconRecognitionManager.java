@@ -133,6 +133,7 @@ public class BeaconRecognitionManager {
                             SmartBulbManager smartBulbManager = SmartBulbManager.getInstance(mActivity);
                             if (smartBulbManager.isEnabled()) {
                                 smartBulbManager.setRGB(0);
+                                mBeaconVisibilityTime = currentTimeMillis;
                             }
                         }
 

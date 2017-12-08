@@ -1,7 +1,6 @@
 package com.harman.goodmood.ui;
 
 import android.content.Context;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -94,7 +93,17 @@ public class VoiceFragment extends Fragment {
         mMicView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setMicEnable(!mMicIsEnable);
+                if (mMicIsEnable) {
+                    setMicEnable(false);
+                    try {
+                        highlight(mVokaturiApi.stopListeningAndAnalyze());
+                    } catch (VokaturiException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    setMicEnable(true);
+                    startListen();
+                }
             }
         });
 
@@ -111,23 +120,33 @@ public class VoiceFragment extends Fragment {
             e.printStackTrace();
         }
 
-        MediaPlayer mediaPlayer = MediaPlayer.create(getContext(), R.raw.how_are_you);
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                if (isDetached()) {
-                    startListen();
-                }
-            }
-        });
-        mediaPlayer.start();
+        //        MediaPlayer mediaPlayer = MediaPlayer.create(getContext(), R.raw.how_are_you);
+        //        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+        //            @Override
+        //            public void onCompletion(MediaPlayer mediaPlayer) {
+        //                if (!isDetached()) {
+        //                    startListen();
+        //                }
+        //            }
+        //        });
+        //        mediaPlayer.start();
 
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        setMicEnable(false);
+
+        if (mMicIsEnable) {
+            setMicEnable(false);
+            try {
+                mVokaturiApi.stopListeningAndAnalyze();
+            } catch (VokaturiException e) {
+                e.printStackTrace();
+            }
+        }
+
+
     }
 
     private void startListen() {
@@ -141,8 +160,6 @@ public class VoiceFragment extends Fragment {
             }
             e.printStackTrace();
         }
-        setMicEnable(!mMicIsEnable);
-        stopListenTimer();
     }
 
     private void stopListenTimer() {
