@@ -90,7 +90,7 @@ public class LightSettingsFragment extends Fragment {
 
     private void setLampColor(int color) {
         mCallback.onColorSelected(color);
-        SmartBulbManager.getInstance(getActivity()).setRGB(color);
+        SmartBulbManager.getInstance(getActivity()).setRGBComponents(0xFF,0,0);
     }
 
     private LocalListener mLocalLampListener = new LocalListener() {

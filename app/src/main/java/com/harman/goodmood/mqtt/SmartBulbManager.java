@@ -124,7 +124,8 @@ public class SmartBulbManager {
 
     public void setRGB(long rgb) throws IllegalStateException {
         if (mService == null) {
-            throw new IllegalStateException("Service is not connected");
+  //          throw new IllegalStateException("Service is not connected");
+            return;
         }
         checkToNotifyLocalListener(rgb);
         mService.publishMQTTMessage(SMART_BULB_ID + "/set/rgb", "" + (rgb & 0x00FFFFFF));

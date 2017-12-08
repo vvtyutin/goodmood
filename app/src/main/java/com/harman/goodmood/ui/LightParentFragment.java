@@ -24,6 +24,7 @@ public class LightParentFragment extends Fragment {
     private ImageView mToolbarIconLight;
     private ImageView mToolbarIconLamp;
     private Switch mSwitch;
+    private LightTemplateFragment mLightTemplateFragment;
 
     @Nullable
     @Override
@@ -37,6 +38,28 @@ public class LightParentFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewpager);
         viewPager.setAdapter(new PagerAdapter(getChildFragmentManager()));
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (mLightTemplateFragment != null) {
+                    if (position == 1) {
+                        mLightTemplateFragment.startTemplate();
+                    } else {
+                        mLightTemplateFragment.stopTemplate();
+                    }
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tablayout);
         tabLayout.setupWithViewPager(viewPager);
@@ -66,7 +89,9 @@ public class LightParentFragment extends Fragment {
                 case 0:
                     return LightSettingsFragment.newInstance(mParentFragmentCallback);
                 case 1:
-                    return new LightTemplateFragment();
+                    mLightTemplateFragment = new LightTemplateFragment();
+                    mLightTemplateFragment.mCallback = mParentFragmentCallback;
+                    return mLightTemplateFragment;
             }
             return null;
         }

@@ -9,9 +9,9 @@ import java.util.ArrayList;
 public class Template {
     private String mTitle;
     private int mResourceID;
-    private ArrayList<Long> mColors;
+    private ArrayList<Integer> mColors;
 
-    public Template(String title, int resourceID, ArrayList<Long> colors) {
+    public Template(String title, int resourceID, ArrayList<Integer> colors) {
         mTitle = title;
         mResourceID = resourceID;
         mColors = colors;
@@ -25,7 +25,7 @@ public class Template {
         return mResourceID;
     }
 
-    public ArrayList<Long> getColors() {
+    public ArrayList<Integer> getColors() {
         return mColors;
     }
 }
