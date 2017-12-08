@@ -64,6 +64,16 @@ public class VoiceFragment extends Fragment {
         mMoodLayoutArray[3].setResources(R.drawable.fear, R.drawable.fear_clr, R.drawable.fear_bg);
         mMoodLayoutArray[4].setResources(R.drawable.angel, R.drawable.angel_clr, R.drawable.angel_bg);
 
+        for (int i = 0; i < 5; i++) {
+            final int finalIndex = i;
+            mMoodLayoutArray[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    setCheckedMood(finalIndex);
+                }
+            });
+        }
+
         ArrayList<Integer> animationFrames = new ArrayList<>();
 
         animationFrames.add(R.drawable.mic_anim_1);
