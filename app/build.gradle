@@ -30,6 +30,7 @@ dependencies {
     // Third party dependency
     compile 'org.altbeacon:android-beacon-library:2.12.3'
     compile 'com.squareup.okhttp:okhttp:2.7.0'
+    compile 'com.github.alshell7:VokaturiAndroid:+'
 
     // Tests dependency
     androidTestImplementation 'junit:junit:4.12'

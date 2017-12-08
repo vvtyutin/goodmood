@@ -1,6 +1,7 @@
 package com.harman.goodmood.ui;
 
-import android.graphics.drawable.AnimationDrawable;
+import android.content.Context;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,15 +10,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.harman.goodmood.mqtt.SmartBulbManager;
 import com.harman.goodmood.util.FrameAnimation;
 import com.harman.goodmood.util.weather.MoodIconLayout;
+import com.projects.alshell.vokaturi.Emotion;
+import com.projects.alshell.vokaturi.EmotionProbabilities;
+import com.projects.alshell.vokaturi.Vokaturi;
+import com.projects.alshell.vokaturi.VokaturiException;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import goodmood.harman.com.goodmood.R;
 
 public class VoiceFragment extends Fragment {
+
+    private static final int LISTENING_DURATION = 7 * 1000;
+
+    private static final int[] COLORS = new int[]{0xFFFF00, 0xFF8080, 0x999999, 0xFF0000, 0x00FF00};
 
     private MoodIconLayout[] mMoodLayoutArray = new MoodIconLayout[5];
     private ImageView mMicView;
@@ -26,6 +39,8 @@ public class VoiceFragment extends Fragment {
     private int mCheckedMood = 0;
 
     private FrameAnimation mFrameAnimation;
+
+    private Vokaturi mVokaturiApi;
 
     @Nullable
     @Override
@@ -49,20 +64,20 @@ public class VoiceFragment extends Fragment {
         mMoodLayoutArray[3].setResources(R.drawable.fear, R.drawable.fear_clr, R.drawable.fear_bg);
         mMoodLayoutArray[4].setResources(R.drawable.angel, R.drawable.angel_clr, R.drawable.angel_bg);
 
-        ArrayList<Integer> integers = new ArrayList<>();
+        ArrayList<Integer> animationFrames = new ArrayList<>();
 
-        integers.add(R.drawable.mic_anim_1);
-        integers.add(R.drawable.mic_anim_2);
-        integers.add(R.drawable.mic_anim_3);
-        integers.add(R.drawable.mic_anim_4);
-        integers.add(R.drawable.mic_anim_5);
-        integers.add(R.drawable.mic_anim_6);
-        integers.add(R.drawable.mic_anim_7);
-        integers.add(R.drawable.mic_anim_8);
-        integers.add(R.drawable.mic_anim_9);
+        animationFrames.add(R.drawable.mic_anim_1);
+        animationFrames.add(R.drawable.mic_anim_2);
+        animationFrames.add(R.drawable.mic_anim_3);
+        animationFrames.add(R.drawable.mic_anim_4);
+        animationFrames.add(R.drawable.mic_anim_5);
+        animationFrames.add(R.drawable.mic_anim_6);
+        animationFrames.add(R.drawable.mic_anim_7);
+        animationFrames.add(R.drawable.mic_anim_8);
+        animationFrames.add(R.drawable.mic_anim_9);
 
         mFrameAnimation = new FrameAnimation(getActivity());
-        mFrameAnimation.setFrames(integers);
+        mFrameAnimation.setFrames(animationFrames);
         mFrameAnimation.setLooped(true);
 
 
@@ -76,21 +91,75 @@ public class VoiceFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            mVokaturiApi = Vokaturi.getInstance(getContext());
+        } catch (VokaturiException e) {
+            e.printStackTrace();
+        }
+
+        MediaPlayer mediaPlayer = MediaPlayer.create(getContext(), R.raw.how_are_you);
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                startListen();
+            }
+        });
+        mediaPlayer.start();
+
+    }
+
+    private void startListen() {
+        try {
+            mVokaturiApi.startListeningForSpeech();
+        } catch (VokaturiException e) {
+            if (e.getErrorCode() == VokaturiException.VOKATURI_DENIED_PERMISSIONS) {
+                Toast.makeText(getContext(), "Grant Microphone and Storage permissions in the app settings to proceed", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getContext(), "There was some problem to start listening audio", Toast.LENGTH_SHORT).show();
+            }
+            e.printStackTrace();
+        }
+        setMicEnable(!mMicIsEnable);
+        stopListenTimer();
+    }
+
+    private void stopListenTimer() {
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        setMicEnable(!mMicIsEnable);
+                        try {
+                            highlight(mVokaturiApi.stopListeningAndAnalyze());
+                        } catch (VokaturiException e) {
+                            e.printStackTrace();
+                            if (e.getErrorCode() == VokaturiException.VOKATURI_NOT_ENOUGH_SONORANCY) {
+                                Toast.makeText(getContext(), "Please speak a more clear and avoid noise around your environment", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    }
+                });
+            }
+        };
+
+        Timer timer = new Timer();
+        timer.schedule(task, LISTENING_DURATION);
+    }
+
     public void setMicEnable(boolean isEnable) {
         mMicIsEnable = isEnable;
         if (isEnable) {
             mMicView.setImageDrawable(getResources().getDrawable(R.drawable.mic_anim));
             mFrameAnimation.start(mMicView);
-
-            //TODO remove the following string
-            setCheckedMood(mCheckedMood++ % 5);
-
         } else {
             mFrameAnimation.stop();
             mMicView.setImageDrawable(getResources().getDrawable(R.drawable.mic_anim_1));
-
-            //TODO remove the following string
-            setCheckedMood(-1);
         }
     }
 
@@ -98,6 +167,30 @@ public class VoiceFragment extends Fragment {
     public void setCheckedMood(int index) {
         for (int i = 0; i < 5; i++) {
             mMoodLayoutArray[i].setChecked(i == index);
+            SmartBulbManager.getInstance(getActivity()).setRGB(COLORS[i]);
         }
+    }
+
+    private void highlight(EmotionProbabilities emotionProbabilities) {
+        Emotion emotion = Vokaturi.extractEmotion(emotionProbabilities);
+        int index = 0;
+        switch (emotion) {
+            case Neutral:
+                index = 0;
+                break;
+            case Sad:
+                index = 1;
+                break;
+            case Happy:
+                index = 2;
+                break;
+            case Angry:
+                index = 3;
+                break;
+            case Feared:
+                index = 4;
+                break;
+        }
+        setCheckedMood(index);
     }
 }
