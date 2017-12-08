@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/viewview"
     android:layout_height="220dp"
     android:layout_width="match_parent"
-    android:background="#5b646c"
+    android:background="@color/default_back"
     android:orientation="vertical"
     android:layout_marginBottom="8dp"
     android:layout_marginTop="8dp">

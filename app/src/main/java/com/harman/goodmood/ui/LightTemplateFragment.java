@@ -88,9 +88,13 @@ public class LightTemplateFragment extends Fragment {
 
                 if (newColors == mColors) {
                     mColors = null;
+                    mTemplatesAdapter.setSelectedItem(-1);
                 } else {
                     mColors = newColors;
+                    mTemplatesAdapter.setSelectedItem(position);
                 }
+
+                mTemplatesAdapter.notifyDataSetChanged();
             }
         });
 
@@ -103,6 +107,7 @@ public class LightTemplateFragment extends Fragment {
     }
 
     public void startTemplate() {
+        mTemplatesAdapter.notifyDataSetChanged();
         mTimerTask = new TimerTask() {
             @Override
             public void run() {
@@ -121,6 +126,7 @@ public class LightTemplateFragment extends Fragment {
     public void stopTemplate() {
         mTimer.cancel();
         mColors = null;
+        mTemplatesAdapter.setSelectedItem(-1);
     }
 
     @Override

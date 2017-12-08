@@ -13,5 +13,7 @@
     <color name="mood_mic_color">#9AE0FF</color>
     <color name="text_subtitle">#5F85EF</color>
     <color name="text_divider">#5269A1</color>
+    <color name="default_back">#5b646c</color>
+    <color name="selected_back">#5F85EF</color>
 
 </resources>

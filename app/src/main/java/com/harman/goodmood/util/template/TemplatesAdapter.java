@@ -21,6 +21,7 @@ public class TemplatesAdapter extends RecyclerView.Adapter<TemplateViewHolder> {
     private Context mContext;
     private ArrayList<Template> mTemplatesList;
     private LightTemplateFragment.TemplateClicked mTemplateCliked;
+    private int mSelectedItem = -1;
 
     public TemplatesAdapter(ArrayList templates, Context context, LightTemplateFragment.TemplateClicked callback) {
         mContext = context;
@@ -43,6 +44,11 @@ public class TemplatesAdapter extends RecyclerView.Adapter<TemplateViewHolder> {
     @Override
     public void onBindViewHolder(TemplateViewHolder holder, int position) {
         Template template = mTemplatesList.get(position);
+        if (position == mSelectedItem) {
+            holder.setSelected(mContext.getResources().getColor(R.color.selected_back));
+        } else {
+            holder.setSelected(mContext.getResources().getColor(R.color.default_back));
+        }
         holder.setTitle(template.getTitle());
         holder.setBackground(mContext.getResources().getDrawable(template.getResourceID()));
     }
@@ -50,5 +56,9 @@ public class TemplatesAdapter extends RecyclerView.Adapter<TemplateViewHolder> {
     @Override
     public int getItemCount() {
         return mTemplatesList.size();
+    }
+
+    public void setSelectedItem(int selectedItem) {
+        mSelectedItem = selectedItem;
     }
 }
