@@ -63,12 +63,12 @@ public class MusicFragment extends Fragment {
     public void setMicEnable(boolean isEnable) {
         mMicIsEnable = isEnable;
         if (isEnable) {
-            mMicView.setImageDrawable(getResources().getDrawable(R.drawable.mic_anim));
+            mMicView.setImageDrawable(getResources().getDrawable(R.drawable.mic_anim_1));
             mFrameAnimation.start(mMicView);
             PitchRecognizerManager.getInstance(getActivity()).startListening();
         } else {
             mFrameAnimation.stop();
-            mMicView.setImageDrawable(getResources().getDrawable(R.drawable.mic_anim));
+            mMicView.setImageDrawable(getResources().getDrawable(R.drawable.mic_anim_1));
             PitchRecognizerManager.getInstance(getActivity()).stopListening();
         }
     }

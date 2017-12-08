@@ -25,6 +25,8 @@ public class HomeActivity extends AppCompatActivity {
 
     private BottomNavigationViewEx mBottomNavigationViewEx;
 
+    private int mCurrentFragmrntId = 0;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,14 +34,14 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         mBottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.navigation);
-//        BottomNavigationHelper.disableShiftMode(mBottomNavigationViewEx);
+        //        BottomNavigationHelper.disableShiftMode(mBottomNavigationViewEx);
 
         mBottomNavigationViewEx.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         // Set test page as default
         mBottomNavigationViewEx.setCurrentItem(0);
         mBottomNavigationViewEx.enableShiftingMode(false);
 
-//        setFragmentIntoContainer(new TestFragment());
+        //        setFragmentIntoContainer(new TestFragment());
         DayLightHelper.loadDaylight();
 
         BeaconRecognitionManager.getInstance(this);
@@ -68,24 +70,29 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_light:
-                    setFragmentIntoContainer(new LightParentFragment());
-                    return true;
-                case R.id.navigation_voice:
-                    setFragmentIntoContainer(new VoiceFragment());
-                    return true;
-                case R.id.navigation_music:
-                    setFragmentIntoContainer(new MusicFragment());
-                    return true;
-                case R.id.navigation_settings:
-                    setFragmentIntoContainer(new SettingFragment());
-                    return true;
+
+            if (item.getItemId() != mCurrentFragmrntId) {
+
+                mCurrentFragmrntId = item.getItemId();
+
+                switch (item.getItemId()) {
+                    case R.id.navigation_light:
+                        setFragmentIntoContainer(new LightParentFragment());
+                        return true;
+                    case R.id.navigation_voice:
+                        setFragmentIntoContainer(new VoiceFragment());
+                        return true;
+                    case R.id.navigation_music:
+                        setFragmentIntoContainer(new MusicFragment());
+                        return true;
+                    case R.id.navigation_settings:
+                        setFragmentIntoContainer(new SettingFragment());
+                        return true;
+                }
             }
             return false;
         }
