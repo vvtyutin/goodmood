@@ -115,11 +115,19 @@ public class VoiceFragment extends Fragment {
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
-                startListen();
+                if (isDetached()) {
+                    startListen();
+                }
             }
         });
         mediaPlayer.start();
 
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        setMicEnable(false);
     }
 
     private void startListen() {
@@ -145,7 +153,7 @@ public class VoiceFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            setMicEnable(!mMicIsEnable);
+                            setMicEnable(false);
                             try {
                                 highlight(mVokaturiApi.stopListeningAndAnalyze());
                             } catch (VokaturiException e) {
@@ -174,7 +182,6 @@ public class VoiceFragment extends Fragment {
             mMicView.setImageDrawable(getResources().getDrawable(R.drawable.mic_anim_1));
         }
     }
-
 
     public void setCheckedMood(int index) {
         SmartBulbManager.getInstance(getContext()).setRGB(COLORS[index]);
