@@ -119,6 +119,7 @@ public class LightTemplateFragment extends Fragment {
 
     public void stopTemplate() {
         mTimer.cancel();
+        mColors = null;
     }
 
     @Override

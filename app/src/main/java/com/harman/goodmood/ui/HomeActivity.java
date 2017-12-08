@@ -36,7 +36,7 @@ public class HomeActivity extends AppCompatActivity {
 
         mBottomNavigationViewEx.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         // Set test page as default
-        mBottomNavigationViewEx.setCurrentItem(1);
+        mBottomNavigationViewEx.setCurrentItem(0);
         mBottomNavigationViewEx.enableShiftingMode(false);
 
 //        setFragmentIntoContainer(new TestFragment());
