@@ -97,17 +97,23 @@ public class BeaconRecognitionManager {
                 @Override
                 public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
 
-                    int proximityState = Settings.getProximityState();
-
-                    if (proximityState == STATE_DISABLED) {
-                        return;
-                    }
-
                     if (beacons.size() > 0) {
+
+                        Log.i(TAG, "The first beacon I see is about " + beacons.iterator().next().getDistance() + " meters away.");
+
+                        int proximityState = Settings.getProximityState();
+
+                        if (proximityState == STATE_DISABLED) {
+                            return;
+                        }
+
                         long currentTimeMillis = System.currentTimeMillis();
 
                         if (beacons.iterator().next().getDistance() <= 3.0) {
-                            if (mBeaconVisibilityTime + DEFAULT_BEACON_NOT_IN_RAINGE_TIME < currentTimeMillis) {
+
+                            long estimateTime = mBeaconVisibilityTime + DEFAULT_BEACON_NOT_IN_RAINGE_TIME;
+
+                            if (estimateTime < currentTimeMillis) {
                                 SmartBulbManager smartBulbManager = SmartBulbManager.getInstance(mActivity);
 
                                 if (proximityState == STATE_CONSTANTLY) {
@@ -121,6 +127,7 @@ public class BeaconRecognitionManager {
                                         }
                                     }
                                 }
+                                mBeaconVisibilityTime = currentTimeMillis;
                             }
                         } else {
                             SmartBulbManager smartBulbManager = SmartBulbManager.getInstance(mActivity);
@@ -128,8 +135,7 @@ public class BeaconRecognitionManager {
                                 smartBulbManager.setRGB(0);
                             }
                         }
-                        mBeaconVisibilityTime = currentTimeMillis;
-                        Log.i(TAG, "The first beacon I see is about " + beacons.iterator().next().getDistance() + " meters away.");
+
                     }
                 }
             });

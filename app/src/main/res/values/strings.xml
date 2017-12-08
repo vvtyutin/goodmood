@@ -1,6 +1,6 @@
 <resources>
     <string name="mqtt_url">ssl://65.51.67.124:8884</string>
-    <string name="app_name">goodmood</string>
+    <string name="app_name">GoodMood</string>
 
     <!--navigation menu-->
     <string name="navigation_title_light">Light</string>

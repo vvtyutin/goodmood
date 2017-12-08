@@ -37,12 +37,12 @@ public class ProximitySettingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_proximity_settings);
 
         mLayoutArray[0] = (LinearLayout) findViewById(R.id.off_layout);
-        mLayoutArray[1] = (LinearLayout) findViewById(R.id.day_night_layout);
-        mLayoutArray[2] = (LinearLayout) findViewById(R.id.constantly_layout);
+        mLayoutArray[1] = (LinearLayout) findViewById(R.id.constantly_layout);
+        mLayoutArray[2] = (LinearLayout) findViewById(R.id.day_night_layout);
 
         mButtonArray[0] = (RadioButton) findViewById(R.id.rb_off);
-        mButtonArray[1] = (RadioButton) findViewById(R.id.rb_day_night);
-        mButtonArray[2] = (RadioButton) findViewById(R.id.rb_constantly);
+        mButtonArray[1] = (RadioButton) findViewById(R.id.rb_constantly);
+        mButtonArray[2] = (RadioButton) findViewById(R.id.rb_day_night);
 
         for (int i = 0; i < 3; i++) {
             final int index = i;
@@ -81,6 +81,7 @@ public class ProximitySettingActivity extends AppCompatActivity {
                 mButtonArray[i].setChecked(true);
                 Settings.setProximityState(index);
                 finish();
+                break;
             } else {
                 mButtonArray[i].setChecked(false);
             }
